@@ -21,7 +21,6 @@ import {
         }
       case FETCH_PHOTOS_FINISHED:
         console.log(`reducers.js - FETCH_PHOTOS_FINISHED`);
-        console.log(action);
         return {
             photoLoading: false,
             photoData: action.payload,

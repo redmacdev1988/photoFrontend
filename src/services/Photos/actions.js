@@ -4,7 +4,7 @@ export const FETCH_PHOTOS_STARTED = 'FETCH_PHOTOS_STARTED';
 export const FETCH_PHOTOS_ERRORED = 'FETCH_PHOTOS_ERRORED';
 export const FETCH_PHOTOS_FINISHED = 'FETCH_PHOTOS_FINISHED';
 
-export const PHOTO_URL = 'http://localhost:80';
+export const PHOTO_URL = 'http://localhost:6680';
 
 export const requestPhotosStartAction = {
   type: FETCH_PHOTOS_STARTED,
@@ -12,7 +12,7 @@ export const requestPhotosStartAction = {
 
 export const requestPhotosFinishAction = payload => ({
   type: FETCH_PHOTOS_FINISHED,
-  payload,
+  payload
 });
 
 export const requestPhotosErrorAction = payload => ({
@@ -23,7 +23,6 @@ export const requestPhotosErrorAction = payload => ({
 export const getPhotos = () => (dispatch) => {
     console.log(`Photos/actions.js - getPhotos`);
     dispatch(requestPhotosStartAction);
-
     let avl = new AVLTreeClass();
     fetch(PHOTO_URL,{
       method: 'GET',
