@@ -7,17 +7,28 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Photos />
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <div className="headerItems">
+          <img src={logo} className="App-logo" alt="logo" />
+          <a
+            className="App-link"
+            href="https://reactjs.org"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Learn React
+          </a>
+        </div>
+        <div className="headerItems">
+          <ul>
+            <li>by Ricky Tsao</li>
+            <li>Project: AVL tree photo gallery</li>
+            <li>Description: filter an image gallery by title</li>
+            <li>Stack: React JS, Node JS</li>
+            <li>Data stored in AVL tree to be extracted</li>
+          </ul>
+        </div>
       </header>
+      <div id='main'><Photos /></div>
     </div>
   );
 }

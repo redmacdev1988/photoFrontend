@@ -3,6 +3,7 @@ import AVLTreeClass from '../../AVLtree/avltree';
 export const FETCH_PHOTOS_STARTED = 'FETCH_PHOTOS_STARTED';
 export const FETCH_PHOTOS_ERRORED = 'FETCH_PHOTOS_ERRORED';
 export const FETCH_PHOTOS_FINISHED = 'FETCH_PHOTOS_FINISHED';
+export const FETCH_PHOTOS_INITIAL = 'FETCH_PHOTOS_INITIAL';
 
 export const PHOTO_URL = 'http://localhost:6680';
 
@@ -17,6 +18,11 @@ export const requestPhotosFinishAction = payload => ({
 
 export const requestPhotosErrorAction = payload => ({
   type: FETCH_PHOTOS_ERRORED,
+  payload,
+});
+
+export const initialArrayAction = payload => ({
+  type: FETCH_PHOTOS_INITIAL,
   payload,
 });
 
@@ -35,6 +41,7 @@ export const getPhotos = () => (dispatch) => {
         avl.insert(result.array[i].url);
       }
       dispatch(requestPhotosFinishAction(avl));
+      dispatch(initialArrayAction(avl.firstToLast()));
     });
 };
 
