@@ -108,7 +108,9 @@ class Photos extends Component {
                             <div class="card-body">
                             <h5 class="card-title" style={{margin:'0',padding:'0'}}>{this.getURLTitle(photo)}</h5>
                             </div>
-                            <img src={photo} class="card-img-top" alt={photo} />
+                            <a href={photo} target='_blank' rel='noopener noreferrer'>
+                                <img src={photo} class="card-img-top" alt={photo} />
+                            </a>
                       </div>
                     ))
                 }
