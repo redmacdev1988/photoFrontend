@@ -5,7 +5,7 @@ export const FETCH_PHOTOS_ERRORED = 'FETCH_PHOTOS_ERRORED';
 export const FETCH_PHOTOS_FINISHED = 'FETCH_PHOTOS_FINISHED';
 export const FETCH_PHOTOS_INITIAL = 'FETCH_PHOTOS_INITIAL';
 
-export const PHOTO_URL = 'http://localhost:6680';
+export const PHOTO_URL = 'http://localhost:6680/';
 
 export const requestPhotosStartAction = {
   type: FETCH_PHOTOS_STARTED,

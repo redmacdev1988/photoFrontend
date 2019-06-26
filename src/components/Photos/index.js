@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getPhotos } from '../../services/Photos/actions';
+import { getPhotos } from '../../services/Photos/actions'
+
 
 const mainContainer = {
     backgroundColor:'black',
@@ -17,19 +18,23 @@ const galleryContainer = {
 
 const searchStyle = {
     textTransform: 'uppercase',
-    width: '40%',
+    width: '80%',
     marginLeft: 'auto',
     marginRight: 'auto',
 }
+
 class Photos extends Component {
    
     constructor(props) {
         super(props);
         this.state = {  
-            photos: null,
+            photos: null, // keeps a list of all the photos
             value: '',
+            startsWithValue: '',
+            selectedOption: null,
         } 
-        this.handleChange = this.handleChange.bind(this);
+        this.titleContainsHandleChange = this.titleContainsHandleChange.bind(this);
+        this.startsWithHandleChange = this.startsWithHandleChange.bind(this);
     }
 
     componentDidMount() {
@@ -39,39 +44,141 @@ class Photos extends Component {
 
     aToZClicked = event => {
         const { treeWithPhotos } = this.props;
+        let arr = treeWithPhotos.firstToLast();
+
+        let arrObj = [];
+        for (let i = 0; i < arr.length; i++) {
+            arrObj.push({
+                found: [],
+                pattern: '',
+                url: arr[i]
+            });
+        }
         this.setState({
-            photos: treeWithPhotos.firstToLast(),
+            photos: arrObj
         });
     };
 
     zToAClicked = event => {
         const { treeWithPhotos } = this.props;
+        let arr = treeWithPhotos.lastToFirst();
+
+        let arrObj = [];
+        for (let i = 0; i < arr.length; i++) {
+            arrObj.push({
+                found: [],
+                pattern: '',
+                url: arr[i]
+            });
+        }
         this.setState({
-            photos: treeWithPhotos.lastToFirst(),
+            photos: arrObj,
         });
     };
 
-    handleChange(event) {
+    startsWithHandleChange(event) {
+        let searchPattern = event.target.value.trim();
+
+        if (!searchPattern || searchPattern === '') {
+            console.log(`searchPattern: |${searchPattern}|`);
+
+            this.setState({
+                startsWithValue: searchPattern
+            });
+
+            const { treeWithPhotos } = this.props;
+            let arr = treeWithPhotos.firstToLast();
+
+            let arrObj = [];
+            for (let i = 0; i < arr.length; i++) {
+                arrObj.push({
+                    found: [],
+                    pattern: '',
+                    url: arr[i]
+                });
+            }
+            this.setState({
+                photos: arrObj,
+            });
+        } else {
+
+            this.setState({
+                startsWithValue: searchPattern
+            });
+    
+            const { treeWithPhotos } = this.props;
+    
+            let prepend = `http://localhost:6680/daily-photos/`;
+            let results = treeWithPhotos.searchForStartingWith(prepend, searchPattern);
+            this.setState({
+                photos: results
+            });
+        }  
+    }
+
+    titleContainsHandleChange(event) {
+       
         this.setState({
             value: event.target.value
         });
         const { treeWithPhotos } = this.props;
-        let prepend = `http://139.199.66.12/daily-photos/${event.target.value}`;
-        let results = treeWithPhotos.searchForAnyMatchStartingWith(prepend);
+        let prepend = `http://localhost:6680/daily-photos/`;
+        let results = treeWithPhotos.searchForAnyMatch(prepend, event.target.value);
+        
         this.setState({
             photos: results
         });
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        if (!prevState.photos) {
+
+        if (prevState.photos && prevState.photos.length === 0 && prevState.startsWithValue !== '') {
             return {
-                photos: (nextProps.treeWithPhotos) ? nextProps.treeWithPhotos.firstToLast() : [],
+                photos: []
             }
         }
-        else if (prevState.value === '' && prevState.photos && prevState.photos.length === 0) {
-            return {
-                photos: (nextProps.treeWithPhotos) ? nextProps.treeWithPhotos.firstToLast() : [],
+
+        if (!prevState.photos) {
+            console.log('no prev photo arr');
+            if (nextProps.treeWithPhotos) {
+                let arr = nextProps.treeWithPhotos.firstToLast();
+                let arrObj = [];
+                for (let i = 0; i < arr.length; i++) {
+                    arrObj.push({
+                        found: [],
+                        pattern: '',
+                        url: arr[i]
+                    });
+                }
+                return {
+                    photos: arrObj
+                }
+            } else {
+                return {
+                    photos: []
+                }
+            }
+
+        }
+        else if ((prevState.value === '' && prevState.photos && prevState.photos.length === 0)
+        || (prevState.startsWithValue === '' && prevState.photos && prevState.photos.length === 0))  {
+            if (nextProps.treeWithPhotos) {
+                let arr = nextProps.treeWithPhotos.firstToLast();
+                let arrObj = [];
+                for (let i = 0; i < arr.length; i++) {
+                    arrObj.push({
+                        found: [],
+                        pattern: '',
+                        url: arr[i]
+                    });
+                }
+                return {
+                    photos: arrObj
+                }
+            } else {
+                return {
+                    photos: []
+                }
             }
         }
         return {
@@ -79,37 +186,53 @@ class Photos extends Component {
         }
      }
 
-    getURLTitle = url => (url.substring(url.lastIndexOf('/')+1, url.length));
+    getURLTitle = url => {
+        if (typeof url === 'string') {
+            return url.substring(url.lastIndexOf('/')+1, url.length);
+        } else if (typeof url === 'object') {
+            return url.text;
+        }
+    }
 
     render() { 
         const { photos } = this.state;
+        console.log(photos);
+
         return (
             <div id="main" style={mainContainer}>
-
-                    <div style={searchStyle} class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
-                        <div class="btn-group mr-2" role="group" aria-label="First group">
-                            <button onClick={this.aToZClicked} type="button" class="btn btn-secondary">A to Z</button>
-                            <button onClick={this.zToAClicked} type="button" class="btn btn-secondary">Z to A</button>
+                <div style={searchStyle} className="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
+                    <div className="btn-group mr-2" role="group" aria-label="First group">
+                        <button onClick={this.aToZClicked} type="button" className="btn btn-secondary">A to Z</button>
+                        <button onClick={this.zToAClicked} type="button" className="btn btn-secondary">Z to A</button>
+                    </div>
+                    <div className="input-group">
+                        <div className="input-group-prepend">
+                        <div className="input-group-text" id="btnGroupAddon">Title contains: </div>
                         </div>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                            <div class="input-group-text" id="btnGroupAddon">Search: </div>
-                            </div>
-                            <input value={this.state.value} onChange={this.handleChange} 
-                                    type="text" class="form-control" placeholder="Image Title" 
-                                    aria-label="Image Title" aria-describedby="btnGroupAddon" />
-                        </div>
+                        <input value={this.state.value} onChange={this.titleContainsHandleChange} 
+                                type="text" className="form-control" placeholder="title name" 
+                                aria-label="title name" aria-describedby="btnGroupAddon" />   
                     </div>
 
+                    <div className="input-group">
+                        <div className="input-group-prepend">
+                        <div className="input-group-text" id="btnGroupStartsWith">Starts With: </div>
+                        </div>
+                        <input value={this.state.startsWithValue} onChange={this.startsWithHandleChange} 
+                                type="text" className="form-control" placeholder="starts with" 
+                                aria-label="starts with" aria-describedby="btnGroupStartsWith" />   
+                    </div>
+
+                </div>
                 <div style={galleryContainer}>
                 {   
-                    photos.map(photo => (
-                        <div key={photo} class="card" style={{width: '23%', margin: '10px'}}>
-                            <div class="card-body">
-                            <h5 class="card-title" style={{margin:'0',padding:'0'}}>{this.getURLTitle(photo)}</h5>
+                    photos.map(photoObj => (
+                        <div key={photoObj.url} className="card" style={{width: '23%', margin: '10px'}}>
+                            <div className="card-body">
+                            <h5 className="card-title" style={{margin:'0',padding:'0'}}>{this.getURLTitle(photoObj.url)}</h5>
                             </div>
-                            <a href={photo} target='_blank' rel='noopener noreferrer'>
-                                <img src={photo} class="card-img-top" alt={photo} />
+                            <a href={photoObj.url} target='_blank' rel='noopener noreferrer'>
+                                <img src={photoObj.url} className="card-img-top" alt={photoObj.text} />
                             </a>
                       </div>
                     ))
@@ -117,13 +240,14 @@ class Photos extends Component {
                 </div>
             </div> 
         );
-        
     }
 }
 
 const mapStateToProps = function(state) {
+
     const { photoReducer } = state;
     return {
+        // it is an AVL tree
         treeWithPhotos: photoReducer.photoData,
     }
 }

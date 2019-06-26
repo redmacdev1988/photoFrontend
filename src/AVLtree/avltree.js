@@ -1,4 +1,7 @@
 
+import BadHueristicAlgo from '../BadHeuristics/BadHeuristics';
+
+
 //var CONSTANTS = require("./constants");
 var CONSTANTS  = {
     PREORDER: 1,
@@ -10,7 +13,6 @@ var CONSTANTS  = {
     RIGHT: 7,
     REVERSE_PRINT: 8,
 };
-
 
 // Using ES6:
 class TreeNode {
@@ -81,45 +83,94 @@ function rotate(node, directionType) {
     return anchor;
 }
 
-function inOrderCollect(data, node, results) {
-    if (node === null || !node) { 
-        return;
+function startsWith(pattern, text) {
+    console.log(`does text ${text} start with pattern ${pattern}?`);
+    if (pattern.length > text.length) {
+        console.log('uh oh pattern length is larger than tet lenght...false');
+        return false;
     }
-    inOrderCollect(data, node.left, results);    
-    if (node.data.startsWith(data)) {    
-        results.push(node.data); 
+
+    let i = 0;
+    let j = 0;
+    while (i < text.length && j < pattern.length) {
+        if (pattern[j] !== text[i]) {
+            console.log(`no  text ${text} DNS with pattern ${pattern}`);
+            return false;
+        }
+        i++;
+        j++
     }
-    inOrderCollect(data, node.right, results);
+
+    console.log(`YES text${text} does start with pattern ${pattern} `);
+    return true;
 }
-// REDO
-// O( log n )
-function anyMatchSearch(data, node, results) {
-    if (node === null || !node) { 
-        //console.log('uh oh node is empty');
-        return; 
-    }
-    //console.log(`anyMatchSearch - node data: ${node.data}, data is: ${data}`);
 
-    if (node.data.startsWith(data)) { 
-        //console.log(`okay,found a match starting at ${node.data}`);
-        // in order collect
-        inOrderCollect(data, node, results);
-    }
+function startWithSearch(prependURL, pattern, node, results) {
+    console.log(`pattern ${pattern}`);
 
-    else if (data < node.data) {
-        //console.log(`anyMatchSearch go left`);
-        anyMatchSearch(data, node.left, results);
-    } else if (data > node.data) {
-        //console.log(`anyMatchSearch go right`);
-        anyMatchSearch(data, node.right, results);
+    if (node == null || !node) return;
+    
+    // see if it starts with it
+    let lastIndexOfText = node.data.lastIndexOf('/');
+    let lastIndexOfDot = node.data.lastIndexOf('.');
+    let ext = node.data.substring(lastIndexOfDot+1, node.data.length);
+    let text = node.data.substring(lastIndexOfText+1, lastIndexOfDot);
+
+    console.log(`text:${text}`);
+
+    if (startsWith(pattern, text)) {
+        console.log(`text ${text} contains pattern ${pattern}`);
+
+        results.push({
+            found: [0],
+            pattern,
+            url: `${prependURL}${text}.${ext}`,
+        });
+
+        // if there's a match, we need to go BOTH left and right, because
+        // its children may have matches also
+        startWithSearch(prependURL, pattern, node.left, results);
+        startWithSearch(prependURL, pattern, node.right, results);
+        return;
     } 
+    
+    
+
+    if (pattern < text) {
+        console.log(`${pattern} <  ${text}`);
+        startWithSearch(prependURL, pattern, node.left, results);
+    } else {
+        console.log(`${pattern} >  ${text}`);
+        startWithSearch(prependURL, pattern, node.right, results);
+    }
+}
+
+// O( log n )
+function anyMatchSearch(prependURL, pattern, node, results) {
+    if (node === null || !node) { return; }
+
+    anyMatchSearch(prependURL, pattern, node.left, results);
+
+    let lastIndexOfText = node.data.lastIndexOf('/');
+    let lastIndexOfDot = node.data.lastIndexOf('.');
+    let ext = node.data.substring(lastIndexOfDot+1, node.data.length);
+    let text = node.data.substring(lastIndexOfText+1, lastIndexOfDot);
+    let search = new BadHueristicAlgo(pattern, text);
+    const found = search.searchPattern();
+    if (found.length > 0) { // we have found something
+        results.push({
+            found,
+            pattern,
+            url: `${prependURL}${text}.${ext}`,
+        }); 
+    }
+    anyMatchSearch(prependURL, pattern, node.right, results);
 }
 
 
 // O( log n )
 function exactSearch(data, node) {
     if (node === null || !node) { 
-        console.log(`${data} not found in this tree`);
         return null; 
     }
     if (data < node.data) {
@@ -315,17 +366,30 @@ const AVLTreeClass = class AVLTree {
         }
     }
 
-    searchForAnyMatchStartingWith(data) {
-        //console.log(`searchForAnyMatchStartingWith: ${data}`);
+    searchForAnyMatch(prependURL, searchPattern) {
+        console.log(`searchForAnyMatchStartingWith: ${searchPattern}`);
         let results = [];
         if (!this._head) {
             console.log(`ø tree is empty. No data to be found`);
             return results;
         } else {
-            anyMatchSearch(data, this._head, results);
+            anyMatchSearch(prependURL, searchPattern, this._head, results);
             return results;
         }
     }
+
+    searchForStartingWith(prependURL, searchPattern) {
+        console.log(`search for pattern ${searchPattern}`);
+        let results = [];
+        if (!this._head) {
+            console.log(`ø tree is empty. No data to be found`);
+            return results;
+        } else {
+            startWithSearch(prependURL, searchPattern, this._head, results);
+            return results;
+        }
+    }
+
 
     searchForExactMatch(data) {
         if (!this._head) {
