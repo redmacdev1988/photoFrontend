@@ -125,6 +125,8 @@ class Photos extends Component {
         let prepend = `http://localhost:6680/daily-photos/`;
         let results = treeWithPhotos.searchForAnyMatch(prepend, event.target.value);
         
+        console.log(results);
+
         this.setState({
             photos: results
         });
@@ -133,6 +135,14 @@ class Photos extends Component {
     static getDerivedStateFromProps(nextProps, prevState) {
 
         if (prevState.photos && prevState.photos.length === 0 && prevState.startsWithValue !== '') {
+            console.log(' photo array is empty AND value of STARTS WITH exists');
+            return {
+                photos: []
+            }
+        }
+
+        if (prevState.photos && prevState.photos.length === 0 && prevState.value !== '') {
+            console.log(' photo array is empty AND value of TITLE CONTAINS exists');
             return {
                 photos: []
             }
