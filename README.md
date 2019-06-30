@@ -1,68 +1,71 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
 
-In the project directory, you can run:
 
-### `npm start`
+## Requirement
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+This project requires [Photo Backend App](https://github.com/redmacdev1988/photoBackend) to be running.
+It will then consume data from that app to render an image gallery.
+
+
+### Installing Node Modules
+
+After you have cloned the project onto your computer, go to the root directory.
+
+```
+yarn install
+```
+
+There should then be a node_modules folder.
+
+
+
+### Running the app
+
+Assuming the [Photo Backend App](https://github.com/redmacdev1988/photoBackend) is running, open a browser
+and type [http://localhost:3000](http://localhost:3000).
+
+You should then be able to see the photo gallery.
 
 The page will reload if you make edits.<br>
 You will also see any lint errors in the console.
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Features
 
-### `npm run build`
+The photo titles/urls are organized in an avl tree.
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### A to Z
+There is an A-Z button. Press this to sort the images alphabetically from A to Z. 
+I used left to right in-order recursive traversal of the tree and push each node onto an array.
+The array is then rendered via React JS.
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+### Z to A
+There is an Z-A button. Press this to sort the images inverse alphabetically from Z to A.
+I used right to left in-order recursive traversal of the tree and push each node onto an array. 
+The array is then rendered via React JS.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Search if title contains a string
 
-### `npm run eject`
+Say you want to see if any image title contains the pattern: 'thai'. Once you type in this pattern, all image titles that contains 'thai' will be displayed.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+This is done by first exporting the avl tree nodes into an array.
+Then I visit every element in the array and apply the [Bad Char Heuristic](https://github.com/redmacdev1988/photoFrontend/blob/master/src/BadHeuristics/BadHeuristics.js) algorithm. Running is O ( text.length / pattern.length);
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+It uses the string you give as a pattern, and tries to see where it exists in the image title. If it does, then I simply push this element
+onto a results array. In the end, the results array is what gets rendered. 
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+This is applied via traversing the whole tree. Hence running time is O(n).
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Total running time is: O(t * n / p);
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Search if title starts with a string
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+It uses a string you give as a pattern. It then travels right or left depending on if the pattern you are trying to match is greater or smaller alphabetically. If smaller, it goes left. If greater, right goes right. This is done O(log n) time.
 
-### Code Splitting
+When your pattern matches, then we need to check for all of this subtree. Because if the current node starts with your pattern, then the left or right node may very well also start with your pattern. Thus, at this point, I simply traverse the whole subtree. This is done in O(n) time.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+In the best case scenerio, its O(log n) where there is only one match. You basically step down into the tree until you find that ONE match.
 
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+In the worse case secenerio, the root has a match. Thus, your whole tree potentically may start with your pattern, and thus, you'll have to traverse every node. This is O(n).
