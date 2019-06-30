@@ -57,50 +57,21 @@ The array is then rendered via React JS. O(n)
 
 ### Search if title STARTS with a string
 
-It uses a string you give as a pattern. It then travels right or left depending on if the pattern you are trying to match is greater or smaller alphabetically. If smaller, it goes left. If greater, it goes right.
+It uses a string you give as a pattern. 
 
-When your pattern matches, then we need to check for both left and right nodes. Because if the current node starts with your pattern, then the left or right node may very well also start with your pattern. 
+1) It then travels right or left depending on if the pattern you are trying to match is greater or smaller alphabetically. If smaller, it goes left. If greater, it goes right.
+
+2) When your pattern matches, then we need to check for both left and right nodes. Because if the current node starts with your pattern, then the left or right node or BOTH may very well also start with your pattern. That's why when you get a match, you must evaluate both left and right.
 
 For example, say we're looking for 'thai'. The current node is 'thaiM', left node is 'thaiA', and right node is 'thaiZ'.  Thus, all three nodes must be included in our search.
 
-But let's say our left node is 'aaa', and right node is thaiZ.
+3) But let's say our left node is 'aaa', and right node is thaiZ.
 
-In this case, we already have had a match at thaiM. When we evaluate 'aaa', its not a match and we can stop the recursion. This is because if 'aaa' is not a match, then it is impossible for any of its children to be a match. 
+In this case, we already have had a match at thaiM. 
+When we evaluate 'aaa', and if its not a match, we simply start over at 1).
+If there is a match at thaiZ, then we apply 2).
 
-Let's take a look at this example here:
-
-```
-let test = new AVLTreeClass();
-test.insert('localhost:1234/thaiM.jpg');
-test.insert('localhost:1234/hobo.jpg');
-test.insert('localhost:1234/thaiZ.jpg');
-test.insert('localhost:1234/thaiS.jpg');
-test.insert('localhost:1234/zz.jpg');
-test.insert('localhost:1234/aa.jpg');
-
-test.displayAllNodes();
-
-let results = test.searchForStartingWith('localhost:1234', 'thai');
-console.log(results);
-```
-
-![Test Results](http://chineseruleof8.com/code/wp-content/uploads/2019/06/avl_subtree_ex.jpg)
-
-When we hit thaiM, we have a match. 
-When we go left, there is no match at 'hobo'. Since we're in the subtree of a match already, we simply return. This only applies if we was a previous match.
-
-
-### Previous match means we are in the subtree of a match
-
-- We check to see if we're in a subtree of a match by looking at results.length. If results.length is still 0, that means there were no matches yet. And hence, we must continue with our binary search of a match. 
-
-- If results.length >= 1, that means there was a match, and we are in the subtree of that match.
-
-The current node at 'hobo' does not match, its impossible for its children to have a match.
-
-If we were to go right, we hit 'thaiZ'. There is a match here. Thus, we need to hit both left and right nodes. 
-.. and so on. 
-
+The reason for this is because as each node is being added, they get rotated and they are not always next to each other alphabetically.
 
 ### Running Time
 

@@ -206,7 +206,6 @@ class Photos extends Component {
 
     render() { 
         const { photos } = this.state;
-        console.log(photos);
 
         return (
             <div id="main" style={mainContainer}>

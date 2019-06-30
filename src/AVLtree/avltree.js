@@ -25,7 +25,7 @@ class TreeNode {
     }
 
     display() {
-        console.log("> " +this.data + " height: " + this.height + ", balance: " + this.balance);
+        //console.log("> " + this.data + " height: " + this.height + ", balance: " + this.balance);
     }
 
     delete() {
@@ -134,19 +134,14 @@ function startWithSearch(prependURL, pattern, node, results) {
         return;
     } 
     
-    if (results.length === 0) {
-        console.log('no match yet. so keep going');
-        if (pattern < text) {
-            console.log(`${pattern} <  ${text}`);
-            startWithSearch(prependURL, pattern, node.left, results);
-        } else {
-            console.log(`${pattern} >  ${text}`);
-            startWithSearch(prependURL, pattern, node.right, results);
-        }
-    } else { // we are in a matched subtree
-        console.log(`No match at ${text}.${ext} There was a previous match, so are in a subtree. We simply stop`);
-        return;
+    
+    console.log('no match yet. so keep going');
+    if (pattern < text) {
+        startWithSearch(prependURL, pattern, node.left, results);
+    } else {
+        startWithSearch(prependURL, pattern, node.right, results);
     }
+  
 }
 
 // O( log n )
@@ -274,8 +269,10 @@ function stdBSTDelete(data, node) {
 function stdBSTInsert(data, node) {
     if (node === null) { return new TreeNode(null, data, 0, 0, null); }
     if (data < node.data) {
+        console.log(`${data} < ${node.data}`);
         node.left = stdBSTInsert(data, node.left);
     } else {
+        console.log(`${data} > ${node.data}`);
         node.right = stdBSTInsert(data, node.right);
     }
     return updateHeightBalanceThenCorrectImbalance(node);
@@ -407,7 +404,6 @@ const AVLTreeClass = class AVLTree {
     displayAllNodes() {
         console.log(`√ displayAllNodes √`);
         console.log(this._head);
-
         if (!this._head) {
             console.log('tree already empty;');
             return;

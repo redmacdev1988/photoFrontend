@@ -38,8 +38,12 @@ export const getPhotos = () => (dispatch) => {
       let result = JSON.parse(json);
       console.log(`getPhotos - received ${result.array.length} number of photos from the server`);
       for (let i = 0; i < result.array.length; i++) {
+        console.log(`inserting ${result.array[i].url}`);
         avl.insert(result.array[i].url);
       }
+
+      avl.displayAllNodes();
+
       dispatch(requestPhotosFinishAction(avl));
       dispatch(initialArrayAction(avl.firstToLast()));
     });
