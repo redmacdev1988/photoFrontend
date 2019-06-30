@@ -42,7 +42,7 @@ You will also see any lint errors in the console.
 ## Features
 
 I used React JS's action/reducer to consume the Photo Backend App. I read in an array of objects which contains the photos' title, and url.
-Each object is then inserted into an avl tree. Naturally this takes O(n) time.
+Each object is then inserted into an avl tree. Naturally this takes O(n * log n) time.
 
 ### A to Z
 There is an A-Z button. Press this to sort the images alphabetically from A to Z. 
@@ -61,12 +61,11 @@ It uses a string you give as a pattern. It then travels right or left depending 
 
 When your pattern matches, then we need to check for both left and right nodes. Because if the current node starts with your pattern, then the left or right node may very well also start with your pattern. 
 
-For example, say we're looking for 'thai'. The current node is thaiM, left node is thaiA, and right node is thaiZ. This whole subtree starts with the string 'thai'.
-
+For example, say we're looking for 'thai'. The current node is 'thaiM', left node is 'thaiA', and right node is 'thaiZ'.  Thus, all three nodes must be included in our search.
 
 But let's say our left node is 'aaa', and right node is thaiZ.
 
-In this case, we already have had a match at thaiM. When we evaluate 'aaa', its not match and we can stop the recursion. This is because if 'aaa' is not a match, then it is impossible for any of its children to be a match. 
+In this case, we already have had a match at thaiM. When we evaluate 'aaa', its not a match and we can stop the recursion. This is because if 'aaa' is not a match, then it is impossible for any of its children to be a match. 
 
 Let's take a look at this example here:
 
@@ -78,7 +77,6 @@ test.insert('localhost:1234/thaiZ.jpg');
 test.insert('localhost:1234/thaiS.jpg');
 test.insert('localhost:1234/zz.jpg');
 test.insert('localhost:1234/aa.jpg');
-test.insert('localhost:1234/icarus.jpg');
 
 test.displayAllNodes();
 
@@ -89,8 +87,12 @@ console.log(results);
 ![Test Results](http://chineseruleof8.com/code/wp-content/uploads/2019/06/avl_subtree_ex.jpg)
 
 When we hit thaiM, we have a match. 
-When we go left, there is no match at 'hobo'. Since we're in the subtree of a match already, we simply return. This is because if the current node at 'hobo' does not 
-match, its impossible for its children to have a match.
+When we go left, there is no match at 'hobo'. Since we're in the subtree of a match already, we simply return. 
+
+- We check to see if we're in a subtree of a match by looking at results.length. If results.length is still 0, that means there were not matches yet. And hence, we must continue with our binary search of a match. 
+- If results.length >= 1, that means there was a match, and we are in the subtree of that match.
+
+The current node at 'hobo' does not match, its impossible for its children to have a match.
 
 If we were to go right, we hit 'thaiZ'. There is a match here. Thus, we need to hit both left and right nodes. 
 .. and so on. 
