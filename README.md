@@ -22,8 +22,16 @@ There should then be a node_modules folder.
 
 ### Running the app
 
-Assuming the [Photo Backend App](https://github.com/redmacdev1988/photoBackend) is running, open a browser
-and type [http://localhost:3000](http://localhost:3000).
+Go to root directory and type:
+
+```
+yarn start
+```
+
+Wait a bit while the app starts up.
+
+Assuming the [Photo Backend App](https://github.com/redmacdev1988/photoBackend) is running, a browser will automatically start up
+at [http://localhost:3000](http://localhost:3000).
 
 You should then be able to see the photo gallery.
 
