@@ -87,9 +87,13 @@ console.log(results);
 ![Test Results](http://chineseruleof8.com/code/wp-content/uploads/2019/06/avl_subtree_ex.jpg)
 
 When we hit thaiM, we have a match. 
-When we go left, there is no match at 'hobo'. Since we're in the subtree of a match already, we simply return. 
+When we go left, there is no match at 'hobo'. Since we're in the subtree of a match already, we simply return. This only applies if we was a previous match.
 
-- We check to see if we're in a subtree of a match by looking at results.length. If results.length is still 0, that means there were not matches yet. And hence, we must continue with our binary search of a match. 
+
+## Previous match means we are in the subtree of a match
+
+- We check to see if we're in a subtree of a match by looking at results.length. If results.length is still 0, that means there were no matches yet. And hence, we must continue with our binary search of a match. 
+
 - If results.length >= 1, that means there was a match, and we are in the subtree of that match.
 
 The current node at 'hobo' does not match, its impossible for its children to have a match.
