@@ -57,15 +57,16 @@ The array is then rendered via React JS. O(n)
 
 ### Search if title STARTS with a string
 
-It uses a string you give as a pattern. It then travels right or left depending on if the pattern you are trying to match is greater or smaller alphabetically. If smaller, it goes left. If greater, it goes right. This is done O(log n) time.
+It uses a string you give as a pattern. It then travels right or left depending on if the pattern you are trying to match is greater or smaller alphabetically. If smaller, it goes left. If greater, it goes right.
 
 When your pattern matches, then we need to check for both left and right nodes. Because if the current node starts with your pattern, then the left or right node may very well also start with your pattern. 
 
-For example, say we're looking for 'thai'. The node is thaiM, left node is thaiA, and right node is thaiZ. This whole subtree starts with the string 'thai'.
+For example, say we're looking for 'thai'. The current node is thaiM, left node is thaiA, and right node is thaiZ. This whole subtree starts with the string 'thai'.
 
-Continuing from the above example of node thaiM. Say our left node is 'AAA', and right node is thaiZ.
 
-In this case, when we evaluate 'AAA', its not match and we can stop the recursion. This is because if 'AAA' is not a match, then it is impossible for any of its children to be a match. 
+But let's say our left node is 'aaa', and right node is thaiZ.
+
+In this case, we already have had a match at thaiM. When we evaluate 'aaa', its not match and we can stop the recursion. This is because if 'aaa' is not a match, then it is impossible for any of its children to be a match. 
 
 Let's take a look at this example here:
 
