@@ -90,7 +90,7 @@ When we hit thaiM, we have a match.
 When we go left, there is no match at 'hobo'. Since we're in the subtree of a match already, we simply return. This only applies if we was a previous match.
 
 
-## Previous match means we are in the subtree of a match
+### Previous match means we are in the subtree of a match
 
 - We check to see if we're in a subtree of a match by looking at results.length. If results.length is still 0, that means there were no matches yet. And hence, we must continue with our binary search of a match. 
 
