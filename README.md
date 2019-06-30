@@ -41,19 +41,73 @@ You will also see any lint errors in the console.
 
 ## Features
 
-The photo titles/urls are organized in an avl tree.
+I used React JS's action/reducer to consume the Photo Backend App. I read in an array of objects which contains the photos' title, and url.
+Each object is then inserted into an avl tree. Naturally this takes O(n) time.
 
 ### A to Z
 There is an A-Z button. Press this to sort the images alphabetically from A to Z. 
 I used left to right in-order recursive traversal of the tree and push each node onto an array.
-The array is then rendered via React JS.
+The array is then rendered via React JS. O(n)
 
 ### Z to A
 There is an Z-A button. Press this to sort the images inverse alphabetically from Z to A.
 I used right to left in-order recursive traversal of the tree and push each node onto an array. 
-The array is then rendered via React JS.
+The array is then rendered via React JS. O(n)
 
-### Search if title contains a string
+
+### Search if title STARTS with a string
+
+It uses a string you give as a pattern. It then travels right or left depending on if the pattern you are trying to match is greater or smaller alphabetically. If smaller, it goes left. If greater, it goes right. This is done O(log n) time.
+
+When your pattern matches, then we need to check for both left and right nodes. Because if the current node starts with your pattern, then the left or right node may very well also start with your pattern. 
+
+For example, say we're looking for 'thai'. The node is thaiM, left node is thaiA, and right node is thaiZ. This whole subtree starts with the string 'thai'.
+
+Continuing from the above example of node thaiM. Say our left node is 'AAA', and right node is thaiZ.
+
+In this case, when we evaluate 'AAA', its not match and we can stop the recursion. This is because if 'AAA' is not a match, then it is impossible for any of its children to be a match. 
+
+Let's take a look at this example here:
+
+```
+let test = new AVLTreeClass();
+test.insert('localhost:1234/thaiM.jpg');
+test.insert('localhost:1234/hobo.jpg');
+test.insert('localhost:1234/thaiZ.jpg');
+test.insert('localhost:1234/thaiS.jpg');
+test.insert('localhost:1234/zz.jpg');
+test.insert('localhost:1234/aa.jpg');
+test.insert('localhost:1234/icarus.jpg');
+
+test.displayAllNodes();
+
+let results = test.searchForStartingWith('localhost:1234', 'thai');
+console.log(results);
+```
+
+![Test Results](http://chineseruleof8.com/code/wp-content/uploads/2019/06/avl_subtree_ex.jpg)
+
+When we hit thaiM, we have a match. 
+When we go left, there is no match at 'hobo'. Since we're in the subtree of a match already, we simply return. This is because if the current node at 'hobo' does not 
+match, its impossible for its children to have a match.
+
+If we were to go right, we hit 'thaiZ'. There is a match here. Thus, we need to hit both left and right nodes. 
+.. and so on. 
+
+
+### Running Time
+
+n is # of nodes.
+p is length of pattern.
+
+In the best case scenerio, its O(log n) + O(p) where there is only one match. You basically step down into the tree until you find that ONE match.
+
+In the worse case secenerio, the root has a match. Thus, your whole tree potentically may start with your pattern, and thus, you'll have to traverse every node. This is O(n * p).
+
+
+
+
+### Search if title CONTAINS a string
 
 Say you want to see if any image title contains the pattern: 'thai'. 
 Once you type in this pattern, all image titles that contains 'thai' will be displayed.
@@ -69,22 +123,3 @@ Hence running time for this part is O(n).
 Total running time of applying Bad Char Heuristic to every node is: O(t * n / p).
 Where t is the image title length. p is the pattern length. And n is the # of nodes.
 
-
-### Search if title starts with a string
-
-It uses a string you give as a pattern. It then travels right or left depending on if the pattern you are trying to match is greater or smaller alphabetically. If smaller, it goes left. If greater, right goes right. This is done O(log n) time.
-
-When your pattern matches, then we need to check for all of this subtree. Because if the current node starts with your pattern, then the left or right node may very well also start with your pattern. 
-
-For example, say we're looking for 'thai'. The subtree is thaiM, left node is thaiA, and right node is thaiZ.
-Thus, this whole subtree starts with the string thai. That's why you'll have to traverse the whole string do the match.
-
-Thus, at this point, I simply traverse the whole subtree. This is done in O(n) time. The running time of the string matching is O(pattern.text) because
-we're simply looking to see if the image title STARTS with the pattern. Thus, you simply loop down the pattern.
-
-n is # of nodes.
-p is length of pattern.
-
-In the best case scenerio, its O(log n) + O(p) where there is only one match. You basically step down into the tree until you find that ONE match.
-
-In the worse case secenerio, the root has a match. Thus, your whole tree potentically may start with your pattern, and thus, you'll have to traverse every node. This is O(n * p).

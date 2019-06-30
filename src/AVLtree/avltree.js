@@ -119,7 +119,7 @@ function startWithSearch(prependURL, pattern, node, results) {
     console.log(`text:${text}`);
 
     if (startsWith(pattern, text)) {
-        console.log(`text ${text} contains pattern ${pattern}`);
+        console.log(`text ${text} starts with pattern ${pattern}`);
 
         results.push({
             found: [0],
@@ -134,14 +134,18 @@ function startWithSearch(prependURL, pattern, node, results) {
         return;
     } 
     
-    
-
-    if (pattern < text) {
-        console.log(`${pattern} <  ${text}`);
-        startWithSearch(prependURL, pattern, node.left, results);
-    } else {
-        console.log(`${pattern} >  ${text}`);
-        startWithSearch(prependURL, pattern, node.right, results);
+    if (results.length === 0) {
+        console.log('no match yet. so keep going');
+        if (pattern < text) {
+            console.log(`${pattern} <  ${text}`);
+            startWithSearch(prependURL, pattern, node.left, results);
+        } else {
+            console.log(`${pattern} >  ${text}`);
+            startWithSearch(prependURL, pattern, node.right, results);
+        }
+    } else { // we are in a matched subtree
+        console.log(`No match at ${text}.${ext} There was a previous match, so are in a subtree. We simply stop`);
+        return;
     }
 }
 
