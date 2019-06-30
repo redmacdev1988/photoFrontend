@@ -59,7 +59,7 @@ Say you want to see if any image title contains the pattern: 'thai'.
 Once you type in this pattern, all image titles that contains 'thai' will be displayed.
 
 This is done by first exporting the avl tree nodes into an array.
-Then I visit every element in the array and apply the [Bad Char Heuristic](https://github.com/redmacdev1988/photoFrontend/blob/master/src/BadHeuristics/BadHeuristics.js) algorithm. Running is O ( text.length / pattern.length);
+Then I visit every element in the array and apply the [Bad Char Heuristic](https://github.com/redmacdev1988/photoFrontend/blob/master/src/BadHeuristics/BadHeuristics.js) algorithm. Running time is O(text.length / pattern.length);
 
 If the Bad Car Heuristic algorithm found index(s) then I simply push this element onto a results array. In the end, the results array is what gets rendered. 
 
@@ -74,8 +74,17 @@ Where t is the image title length. p is the pattern length. And n is the # of no
 
 It uses a string you give as a pattern. It then travels right or left depending on if the pattern you are trying to match is greater or smaller alphabetically. If smaller, it goes left. If greater, right goes right. This is done O(log n) time.
 
-When your pattern matches, then we need to check for all of this subtree. Because if the current node starts with your pattern, then the left or right node may very well also start with your pattern. Thus, at this point, I simply traverse the whole subtree. This is done in O(n) time.
+When your pattern matches, then we need to check for all of this subtree. Because if the current node starts with your pattern, then the left or right node may very well also start with your pattern. 
 
-In the best case scenerio, its O(log n) where there is only one match. You basically step down into the tree until you find that ONE match.
+For example, say we're looking for 'thai'. The subtree is thaiM, left node is thaiA, and right node is thaiZ.
+Thus, this whole subtree starts with the string thai. That's why you'll have to traverse the whole string do the match.
 
-In the worse case secenerio, the root has a match. Thus, your whole tree potentically may start with your pattern, and thus, you'll have to traverse every node. This is O(n).
+Thus, at this point, I simply traverse the whole subtree. This is done in O(n) time. The running time of the string matching is O(pattern.text) because
+we're simply looking to see if the image title STARTS with the pattern. Thus, you simply loop down the pattern.
+
+n is # of nodes.
+p is length of pattern.
+
+In the best case scenerio, its O(log n) + O(p) where there is only one match. You basically step down into the tree until you find that ONE match.
+
+In the worse case secenerio, the root has a match. Thus, your whole tree potentically may start with your pattern, and thus, you'll have to traverse every node. This is O(n * p).
