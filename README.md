@@ -95,7 +95,7 @@ Then, let's say we add two more image titles: shaoxing, and shanghai.
 It creates unbalance at node thai2_ledge. We do a right rotation on it.
 
 Now, look at the graph:
-#### thai2_prayerhouse and thai2_ledge has become separated
+#### thai2_prayerhouse and thai2_ledge have become separated
 
 That is why WHEN WE DO NOT get a match at shaoxing, we cannot stop there. 
 
@@ -110,7 +110,7 @@ p is length of pattern.
 
 In the best case scenerio, its O(log n) + O(p) where there is only one match. You basically step down into the tree until you find that ONE match.
 
-In the worse case secenerio, the root has a match. Thus, your whole tree potentically may start with your pattern, and thus, you'll have to traverse every node. This is O(n * p).
+In the worse case secenerio, every node is a match. This is O(n * p).
 
 ### Search if title CONTAINS a string
 
