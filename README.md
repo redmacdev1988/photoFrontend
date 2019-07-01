@@ -59,11 +59,12 @@ The array is then rendered via React JS. O(n)
 
 It uses a string you give as a pattern. 
 
-1) It then travels right or left depending on if the pattern you are trying to match is greater or smaller alphabetically. If smaller, it goes left. If greater, it goes right.
+1) It then travels right or left depending on if the pattern you are trying to match is greater or smaller alphabetically. If smaller, it goes left. If greater, it goes right. The pattern matching itself is at most pattern.length. Because we simply match pattern with the beginning substring of the image title.
 
-2) When your pattern matches, then we need to check for both left and right nodes. Because if the current node starts with your pattern, then the left or right node or BOTH may very well also start with your pattern. That's why when you get a match, you must evaluate both left and right.
+2) When you have a successful pattern match, we store the current image title in a results array.
+Then, instead of trying to see if we should go left or right, we actually need to check for BOTH left and right nodes. Because if the current node starts with your pattern, then the left or right node or BOTH may very well also start with your pattern. That's why when you get a match, you must evaluate both left and right.
 
-For example, say we're looking for 'thai'. The current node is 'thaiM', left node is 'thaiA', and right node is 'thaiZ'.  Thus, all three nodes must be included in our search.
+For example, say we're looking for 'thai'. The current node is 'thaiM', left node is 'thaiA', and right node is 'thaiZ'. Thus, all three nodes must be included in our search.
 
 3) But let's say our left node is 'aaa', and right node is thaiZ.
 
@@ -72,6 +73,10 @@ When we evaluate 'aaa', and if its not a match, we simply start over at 1).
 If there is a match at thaiZ, then we apply 2).
 
 The reason for this is because as each node is being added, they get rotated and they are not always next to each other alphabetically.
+
+Here is an example:
+
+[Photo Backend App](http://chineseruleof8.com/code/wp-content/uploads/2019/07/startWith_reasoning.jpg)
 
 ### Running Time
 
