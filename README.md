@@ -76,7 +76,7 @@ The reason for this is because as each node is being added, they get rotated and
 
 Here is an example:
 
-![Photo Backend App](http://chineseruleof8.com/code/wp-content/uploads/2019/07/startWith_reasoning.jpg)
+![Photo Backend App](http://chineseruleof8.com/code/wp-content/uploads/2019/07/startWith_reasoning-e1561945583239.jpg)
 
 ### Running Time
 
@@ -86,9 +86,6 @@ p is length of pattern.
 In the best case scenerio, its O(log n) + O(p) where there is only one match. You basically step down into the tree until you find that ONE match.
 
 In the worse case secenerio, the root has a match. Thus, your whole tree potentically may start with your pattern, and thus, you'll have to traverse every node. This is O(n * p).
-
-
-
 
 ### Search if title CONTAINS a string
 
