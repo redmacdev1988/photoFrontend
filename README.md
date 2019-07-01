@@ -94,9 +94,12 @@ Then, let's say we add two more image titles: shaoxing, and shanghai.
 
 It creates unbalance at node thai2_ledge. We do a right rotation on it.
 
-Now, look at the graph, thai2_prayerhouse and thai2_ledge has become separated.
-That is why when we DO NOT get a match at shaoxing, we can't stop. We must keep traversing down the tree
-in order to find other potential matches for 'thai2'. 
+Now, look at the graph:
+#### thai2_prayerhouse and thai2_ledge has become separated
+
+That is why WHEN WE DO NOT get a match at shaoxing, we cannot stop there. 
+
+We must keep traversing down the tree in order to find other potential matches for 'thai2'. 
 
 
 
