@@ -74,12 +74,12 @@ If there is a match at thaiZ, then we apply 2).
 
 The reason for this is because as each node is being added, they get rotated and they are not always next to each other alphabetically.
 
-Here is an example:
+### example
 
-We first have thai2_ledge. Then we add thai2_prayerhouse, and thailand_blue.
+We first have image title 'thai2_ledge'. Then we add 'thai2_prayerhouse', and 'thailand_blue'.
 This creates unbalance at thai2_ledge. So we do a left rotation.
 
-We wend up with a balanced tree. Now, thai2_prayerhouse is the root node.
+We end up with a balanced tree. Now, thai2_prayerhouse is the root node.
 
 In this situation, say the user wants to search for 'thai2'.
 We get a match at the root node on thai2_prayerhouse.
