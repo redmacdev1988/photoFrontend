@@ -76,7 +76,29 @@ The reason for this is because as each node is being added, they get rotated and
 
 Here is an example:
 
+We first have thai2_ledge. Then we add thai2_prayerhouse, and thailand_blue.
+This creates unbalance at thai2_ledge. So we do a left rotation.
+
+We wend up with a balanced tree. Now, thai2_prayerhouse is the root node.
+
+In this situation, say the user wants to search for 'thai2'.
+We get a match at the root node on thai2_prayerhouse.
+We then check for both nodes. 
+The left node matches. The right one does not. 
+
+Thus, the result will be: thai2_prayerhouse, thai2_ledge.
+
 ![Photo Backend App](http://chineseruleof8.com/code/wp-content/uploads/2019/07/startWith_reasoning-e1561945583239.jpg)
+
+Then, let's say we add two more image titles: shaoxing, and shanghai.
+
+It creates unbalance at node thai2_ledge. We do a right rotation on it.
+
+Now, look at the graph, thai2_prayerhouse and thai2_ledge has become separated.
+That is why when we DO NOT get a match at shaoxing, we can't stop. We must keep traversing down the tree
+in order to find other potential matches for 'thai2'. 
+
+
 
 ### Running Time
 
