@@ -76,7 +76,7 @@ The reason for this is because as each node is being added, they get rotated and
 
 Here is an example:
 
-[Photo Backend App](http://chineseruleof8.com/code/wp-content/uploads/2019/07/startWith_reasoning.jpg)
+![Photo Backend App](http://chineseruleof8.com/code/wp-content/uploads/2019/07/startWith_reasoning.jpg)
 
 ### Running Time
 
